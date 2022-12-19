@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Task.Domain.Models;
+using Task.Task.Dal.Models;
 
-namespace Task.Persistence
+namespace Task.Task.Dal.Persistence
 {
-    public class AppDbContext: DbContext
+    public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

@@ -3,19 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Task.Persistence;
+using Task.Task.Dal.Persistence;
 
 #nullable disable
 
 namespace Task.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221217191750_fix_migration")]
-    partial class fix_migration
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

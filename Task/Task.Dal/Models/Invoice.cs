@@ -1,15 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Task.Domain.Enums;
+using Task.Task.Dal.Enums;
 
-namespace Task.Domain.Models
+namespace Task.Task.Dal.Models
 {
     public class Invoice
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int InvoiceId { get; set; }
         public int CustomerId { get; set; }
-        public DateTime InvoiceDate { get; set; }
+        public DateTime InvoiceDate { get; set; } = DateTime.Now;
         public decimal Value { get; set; }
-        public InvoiceState State { get; set; } 
+        public InvoiceState State { get; set; }
     }
 }

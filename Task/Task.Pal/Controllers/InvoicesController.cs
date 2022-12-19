@@ -1,45 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Task.Domain.Models;
-using Task.Persistence;
+using Task.Task.Bal.Dto;
+using Task.Task.Dal.Models;
+using Task.Task.Dal.Persistence;
 
-namespace Task.Controllers
+namespace Task.Task.Pal.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class InvoicesController : ControllerBase
     {
         private readonly AppDbContext _context;
-
-        public InvoicesController(AppDbContext context)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        public InvoicesController(AppDbContext context, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         // GET: api/Invoices
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices()
+        public IActionResult GetInvoices()
         {
-            return await _context.Invoices.ToListAsync();
+            var invoices = _unitOfWork.Invoices.GetAll();
+            return Ok(invoices);
         }
 
         // GET: api/Invoices/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Invoice>> GetInvoice(int id)
+        public IActionResult GetInvoice(int id)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
+            var invoice = _unitOfWork.Invoices.GetById(id);
 
             if (invoice == null)
             {
                 return NotFound();
             }
 
-            return invoice;
+            return Ok(invoice);
         }
 
         // PUT: api/Invoices/5
@@ -76,26 +77,27 @@ namespace Task.Controllers
         // POST: api/Invoices
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Invoice>> PostInvoice(Invoice invoice)
+        public IActionResult PostInvoice(InvoiceDto invoice)
         {
-            _context.Invoices.Add(invoice);
-            await _context.SaveChangesAsync();
+            var mappedInvoice = _mapper.Map<Invoice>(invoice);
+            _unitOfWork.Invoices.Add(mappedInvoice);
+            _unitOfWork.Complete();
 
             return CreatedAtAction("GetInvoice", new { id = invoice.InvoiceId }, invoice);
         }
 
         // DELETE: api/Invoices/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInvoice(int id)
+        public IActionResult DeleteInvoice(int id)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
+            var invoice = _unitOfWork.Invoices.GetById(id);
             if (invoice == null)
             {
                 return NotFound();
             }
 
-            _context.Invoices.Remove(invoice);
-            await _context.SaveChangesAsync();
+            _unitOfWork.Invoices.Remove(invoice);
+            _unitOfWork.Complete();
 
             return NoContent();
         }

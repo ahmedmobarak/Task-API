@@ -1,45 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Task.Domain.Models;
-using Task.Persistence;
+using Task.Task.Bal.Dto;
+using Task.Task.Dal.Models;
+using Task.Task.Dal.Persistence;
 
-namespace Task.Controllers
+namespace Task.Task.Pal.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
     {
         private readonly AppDbContext _context;
-
-        public CustomersController(AppDbContext context)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        public CustomersController(AppDbContext context, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         // GET: api/Customers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public IActionResult GetCustomers()
         {
-            return await _context.Customers.ToListAsync();
+            var customers = _unitOfWork.Customers.GetAll();
+            return Ok(customers);
         }
 
         // GET: api/Customers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomer(int id)
+        public IActionResult GetCustomer(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = _unitOfWork.Customers.GetById(id);
+
 
             if (customer == null)
             {
                 return NotFound();
             }
 
-            return customer;
+            return Ok(customer);
         }
 
         // PUT: api/Customers/5
@@ -76,26 +78,27 @@ namespace Task.Controllers
         // POST: api/Customers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
+        public IActionResult PostCustomer(CustomerDto customer)
         {
-            _context.Customers.Add(customer);
-            await _context.SaveChangesAsync();
+            var mappedCustomer = _mapper.Map<Customer>(customer);
+            _unitOfWork.Customers.Add(mappedCustomer);
+            _unitOfWork.Complete();
 
-            return CreatedAtAction("GetCustomer", new { id = customer.CustomerId }, customer);
+            return Ok(mappedCustomer);
         }
 
         // DELETE: api/Customers/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomer(int id)
+        public IActionResult DeleteCustomer(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = _unitOfWork.Customers.GetById(id);
             if (customer == null)
             {
                 return NotFound();
             }
 
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
+            _unitOfWork.Customers.Remove(customer);
+            _unitOfWork.Complete();
 
             return NoContent();
         }
