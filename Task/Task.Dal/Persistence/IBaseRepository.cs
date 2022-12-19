@@ -10,6 +10,8 @@ namespace Task.Task.Dal.Persistence
         void Add(T entity);
         void AddRange(IEnumerable<T> entities);
         void Remove(T entity);
+
+        int Count();
         void RemoveRange(IEnumerable<T> entities);
     }
 }

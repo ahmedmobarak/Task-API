@@ -43,5 +43,10 @@ namespace Task.Task.Dal.Persistence
         {
             _context.Set<T>().RemoveRange(entities);
         }
+
+        int IBaseRepository<T>.Count()
+        {
+            return _context.Set<T>().Count();
+        }
     }
 }

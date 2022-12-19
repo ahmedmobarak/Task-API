@@ -102,6 +102,13 @@ namespace Task.Task.Pal.Controllers
             return NoContent();
         }
 
+        [Route("count")]
+        [HttpGet]
+        public IActionResult InvoicesCount() 
+        {
+            return Ok(_unitOfWork.Invoices.Count());
+        }
+
         private bool InvoiceExists(int id)
         {
             return _context.Invoices.Any(e => e.InvoiceId == id);

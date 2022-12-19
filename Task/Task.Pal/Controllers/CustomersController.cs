@@ -103,6 +103,13 @@ namespace Task.Task.Pal.Controllers
             return NoContent();
         }
 
+        [Route("count")]
+        [HttpGet]
+        public IActionResult CustomersCount()
+        {
+            return Ok(_unitOfWork.Customers.Count());
+        }
+
         private bool CustomerExists(int id)
         {
             return _context.Customers.Any(e => e.CustomerId == id);
