@@ -25,7 +25,7 @@ namespace Task.Task.Pal.Controllers
         [HttpGet]
         public IActionResult GetInvoices()
         {
-            var invoices = _unitOfWork.Invoices.GetAll();
+            var invoices = _context.Invoices.Include(i => i.Customer);
             return Ok(invoices);
         }
 
@@ -33,7 +33,7 @@ namespace Task.Task.Pal.Controllers
         [HttpGet("{id}")]
         public IActionResult GetInvoice(int id)
         {
-            var invoice = _unitOfWork.Invoices.GetById(id);
+            var invoice = _context.Invoices.Include(i => i.Customer).FirstOrDefault(i => i.InvoiceId == id);
 
             if (invoice == null)
             {

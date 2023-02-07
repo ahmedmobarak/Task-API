@@ -10,6 +10,8 @@ namespace Task.Task.Dal.Models
         public int CustomerId { get; set; }
         public DateTime InvoiceDate { get; set; } = DateTime.Now;
         public decimal Value { get; set; }
+        
+        public Customer? Customer { get; set; }
         public InvoiceState State { get; set; }
     }
 }

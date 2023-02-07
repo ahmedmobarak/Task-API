@@ -8,8 +8,7 @@ namespace Task.Task.Bal.Mapping
     {
         public CustomerMapper()
         {
-            CreateMap<CustomerDto, Customer>();
-            CreateMap<Customer, CustomerDto>();
+            CreateMap<CustomerDto, Customer>().ReverseMap();
         }
     }
 }

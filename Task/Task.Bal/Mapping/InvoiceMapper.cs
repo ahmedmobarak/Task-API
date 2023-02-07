@@ -8,8 +8,7 @@ namespace Task.Task.Bal.Mapping
     {
         public InvoiceMapper()
         {
-            CreateMap<InvoiceDto, Invoice>();
-            CreateMap<Invoice, InvoiceDto>();
+            CreateMap<InvoiceDto, Invoice>().ReverseMap();
         }
     }
 }

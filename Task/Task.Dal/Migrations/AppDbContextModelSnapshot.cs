@@ -40,7 +40,7 @@ namespace Task.Migrations
 
                     b.HasKey("CustomerId");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("Task.Domain.Models.Invoice", b =>
@@ -67,7 +67,7 @@ namespace Task.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoices", (string)null);
                 });
 
             modelBuilder.Entity("Task.Domain.Models.Invoice", b =>
