@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Task.Task.Bal.Dto;
@@ -25,7 +26,8 @@ namespace Task.Task.Pal.Controllers
         [HttpGet]
         public IActionResult GetCustomers()
         {
-            var customers = _unitOfWork.Customers.GetAll();
+            var res = _context.Customers.Include(c => c.Invoices).ToList();
+            var customers = _mapper.Map<List<Customer>, List<CustomerResponseDto>>(res);
             return Ok(customers);
         }
 
@@ -33,7 +35,8 @@ namespace Task.Task.Pal.Controllers
         [HttpGet("{id}")]
         public IActionResult GetCustomer(int id)
         {
-            var customer = _unitOfWork.Customers.GetById(id);
+            var res = _context.Customers.Include(c => c.Invoices).Where(c => c.CustomerId == id).FirstOrDefault();
+            var customer = _mapper.Map<Customer, CustomerResponseDto>(res);
 
 
             if (customer == null)

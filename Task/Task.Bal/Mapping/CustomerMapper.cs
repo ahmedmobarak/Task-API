@@ -9,6 +9,8 @@ namespace Task.Task.Bal.Mapping
         public CustomerMapper()
         {
             CreateMap<CustomerDto, Customer>().ReverseMap();
+            CreateMap<Customer, CustomerResponseDto>(MemberList.Source)
+            .ForMember(d => d.InvoicesCount, opt => opt.MapFrom(src => src.Invoices.Count()));
         }
     }
 }

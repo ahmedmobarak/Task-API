@@ -10,6 +10,7 @@ namespace Task.Task.Dal.Models
         [Required]
         public string CustomerName { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
+        public int? InvoicesCount { get; set; }
         [JsonIgnore]
         public List<Invoice>? Invoices { get; set; }
     }
